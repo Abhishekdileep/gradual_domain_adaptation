@@ -21,7 +21,6 @@ def simple_conv_model(num_labels, hidden_nodes=64, input_shape=(28,28,1), l2_reg
     keras.layers.Dense(num_labels, activation=tf.nn.softmax, name='out')
     ])
 
-
 def split_dataset(num_labeled, num_classes, train_x, train_y):
     assert(num_labeled % num_classes == 0)
     assert(np.min(train_y) == 0 and np.max(train_y) == num_classes - 1)
@@ -43,8 +42,6 @@ def split_dataset(num_labeled, num_classes, train_x, train_y):
     assert(labeled_x.shape[0] == labeled_y.shape[0])
     assert(labeled_x.shape[1:] == train_x.shape[1:])
     return labeled_x, labeled_y, unlabeled_x, unlabeled_y
-
-
 
 def pseudolabel(model, num_labeled, train_x, train_y, test_x, test_y):
     model.compile(loss='sparse_categorical_crossentropy',
@@ -71,8 +68,7 @@ def pseudolabel(model, num_labeled, train_x, train_y, test_x, test_y):
         preds = np.argmax(logits, axis=1)
         model.fit(unlabeled_x[indices], preds[indices], epochs=1, verbose=False)
         model.evaluate(test_x, test_y)
-
-
+        
 def main():
     (train_x, train_y), (test_x, test_y) = mnist.load_data()
     train_x = np.expand_dims(train_x, axis=-1)
