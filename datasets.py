@@ -3,6 +3,9 @@ import collections
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.datasets import mnist
+#### new code ##### 
+import tensorflow_datasets as tfds
+ 
 from tensorflow.keras.datasets import cifar10
 import scipy.io
 from scipy import ndimage
@@ -228,6 +231,27 @@ def get_preprocessed_mnist():
     test_x = np.expand_dims(np.array(test_x), axis=-1)
     return (train_x, train_y), (test_x, test_y)
 
+def get_preprocessed_svhn():
+    train = tfds.load('svhn_cropped', split='train', shuffle_files=True)
+    test = tfds.load('svhn_cropped', split='test', shuffle_files=True)
+    train_x, train_y = [], []
+    test_x, test_y = [], []
+    for example in train:
+        image = example['image'].numpy()
+        label = example['label'].numpy()
+        train_x.append(image)
+        train_y.append(label)
+    for example in test:
+        image = example['image'].numpy()
+        label = example['label'].numpy()
+        test_x.append(image)
+        test_y.append(label)
+    train_x = np.array(train_x) / 255.0
+    test_x = np.array(test_x) / 255.0
+    train_x, train_y = shuffle(train_x, train_y)
+    train_x = np.expand_dims(np.array(train_x), axis=-1)
+    test_x = np.expand_dims(np.array(test_x), axis=-1)
+    return (train_x, train_y), (test_x, test_y)
 
 def sample_rotate_images(xs, start_angle, end_angle):
     new_xs = []
@@ -460,6 +484,9 @@ def rotated_mnist_60_data_func():
         train_x, train_y, test_x, test_y, [0.0, 5.0], [5.0, 60.0], [55.0, 60.0],
         5000, 6000, 48000, 50000)
 
+def mnist_svhn_data_func():
+    (train_mnist_x , train_mnist_y) , (test_mnist_x, test_mnist_y) = get_preprocessed_mnist()
+    (train_svhn_x, train_svhn_y), (test_svhn_x, test_svhn_y) = get_preprocessed_svhn()
 
 def rotated_mnist_60_dialing_ratios_data_func():
     (train_x, train_y), (test_x, test_y) = get_preprocessed_mnist()
