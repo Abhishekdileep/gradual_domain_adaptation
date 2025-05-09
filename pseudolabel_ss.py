@@ -3,7 +3,7 @@ import tensorflow.keras as keras
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets import mnist
-import dataset 
+import datasets 
 
 
 def simple_conv_model(num_labels, hidden_nodes=64, input_shape=(28,28,1), l2_reg=0.0):
@@ -109,4 +109,4 @@ def svhn_mnist():
     conv_model = simple_conv_model(10)
     pseudolabel2(conv_model, train_mnist_x, train_mnist_y, train_svhn_x, train_svhn_y, train_svhn_x, train_svhn_y)
     
-main()
+svhn_mnist()
