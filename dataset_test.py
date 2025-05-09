@@ -4,10 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 from skimage.transform import resize
-
+import ipdb
 
 def shuffle(xs, ys):
     indices = list(range(len(xs)))
+    ipdb.set_trace()
     np.random.shuffle(indices)
     return xs[indices], ys[indices]
 
