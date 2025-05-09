@@ -3,6 +3,7 @@ import tensorflow.keras as keras
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets import mnist
+import dataset 
 
 
 def simple_conv_model(num_labels, hidden_nodes=64, input_shape=(28,28,1), l2_reg=0.0):
@@ -68,6 +69,27 @@ def pseudolabel(model, num_labeled, train_x, train_y, test_x, test_y):
         preds = np.argmax(logits, axis=1)
         model.fit(unlabeled_x[indices], preds[indices], epochs=1, verbose=False)
         model.evaluate(test_x, test_y)
+
+def pseudolabel2(model, train_mnist_x, train_mnist_y, svhn_x, svhn_y, test_x, test_y):
+    model.compile(loss='sparse_categorical_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+
+    print(svhn_x.shape, svhn_y.shape)
+    print(svhn_y[:10], svhn_y[100:110])
+    print([np.sum(svhn_y == i) for i in range(10)])
+    model.fit(svhn_x, svhn_y, epochs=10)
+    confidence_q = 0.1
+    epochs = 10
+    for i in range(epochs):
+        logits = model.predict(np.concatenate([train_mnist_x]))
+        confidence = np.amax(logits, axis=1) - np.amin(logits, axis=1)
+        alpha = np.quantile(confidence, confidence_q)
+        indices = np.argwhere(confidence >= alpha)[:, 0]
+        preds = np.argmax(logits, axis=1)
+        model.fit(train_mnist_x[indices], preds[indices], epochs=1, verbose=False)
+        model.evaluate(test_x, test_y) 
+     
         
 def main():
     (train_x, train_y), (test_x, test_y) = mnist.load_data()
@@ -76,4 +98,15 @@ def main():
     conv_model = simple_conv_model(10)
     pseudolabel(conv_model, 1000, train_x, train_y, test_x, test_y)
 
+
+def svhn_mnist():
+    (train_mnist_x, train_mnist_y), (test_mnist_x, test_mnist_y) = dataset.get_preprocessed_mnist()
+    (train_svhn_x, train_svhn_y), (test_svhn_x, test_svhn_y) = dataset.get_preprocessed_svhn()
+    train_svhn_x = np.expand_dims(train_svhn_x, axis=-1)
+    train_mnist_x = np.expand_dims(train_mnist_x, axis=-1)
+    test_svhn_x = np.expand_dims(test_svhn_x, axis=-1)
+    test_mnist_x = np.expand_dims(test_mnist_x, axis=-1)
+    conv_model = simple_conv_model(10)
+    pseudolabel2(conv_model, train_mnist_x, train_mnist_y, train_svhn_x, train_svhn_y, train_svhn_x, train_svhn_y)
+    
 main()

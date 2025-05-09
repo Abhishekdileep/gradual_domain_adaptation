@@ -122,6 +122,14 @@ def rotated_mnist_60_conv_experiment():
         save_file='saved_files/rot_mnist_60_conv.dat',
         model_func=models.simple_softmax_conv_model, interval=2000, epochs=10, loss='ce',
         soft=False, conf_q=0.1, num_runs=5)
+    
+
+def mnist_svhn_experiment():
+    run_experiment(
+        dataset_func=datasets.mnist_svhn_data_func, n_classes=10, input_shape=(28, 28, 1),
+        save_file='saved_files/mnist_svhn_conv.dat',
+        model_func=models.simple_softmax_conv_model, interval=2000, epochs=10, loss='ce',
+        soft=False, conf_q=0.1, num_runs=5)
 
 
 def portraits_conv_experiment():
