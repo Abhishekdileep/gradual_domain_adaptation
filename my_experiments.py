@@ -114,3 +114,10 @@ def experiment_results(save_name):
     print("Best of All self-train accuracies (%): ", np.mean(best_alls),
           mult * np.std(best_alls) / np.sqrt(num_runs))
 
+
+def mnist_svhn():
+    run_experiment(
+        dataset_func=datasets.rotated_mnist_60_data_func, n_classes=10, input_shape=(28, 28, 1),
+        save_file='saved_files/rot_mnist_60_conv.dat',
+        model_func=models.simple_softmax_conv_model, interval=2000, epochs=10, loss='ce',
+        soft=False, conf_q=0.1, num_runs=5)

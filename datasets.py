@@ -13,7 +13,7 @@ from scipy.stats import ortho_group
 import sklearn.preprocessing
 import pickle
 import utils
-import ipdb
+
 Dataset = collections.namedtuple('Dataset',
     'get_data n_src_train n_src_valid n_target_unsup n_target_val n_target_test target_end '
     'n_classes input_shape')
@@ -37,7 +37,6 @@ def split_sizes(array, sizes):
 
 def shuffle(xs, ys):
     indices = list(range(len(xs)))
-    ipdb.set_trace()
     np.random.shuffle(indices)
     return xs[indices], ys[indices]
 

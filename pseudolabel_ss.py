@@ -101,8 +101,8 @@ def main():
 
 
 def svhn_mnist():
-    (train_mnist_x, train_mnist_y), (test_mnist_x, test_mnist_y) = dataset.get_preprocessed_mnist()
-    (train_svhn_x, train_svhn_y), (test_svhn_x, test_svhn_y) = dataset.get_preprocessed_svhn()
+    (train_mnist_x, train_mnist_y), (test_mnist_x, test_mnist_y) = datasets.get_preprocessed_mnist()
+    (train_svhn_x, train_svhn_y), (test_svhn_x, test_svhn_y) = datasets.get_preprocessed_svhn()
     train_svhn_x = np.expand_dims(train_svhn_x, axis=-1)
     train_mnist_x = np.expand_dims(train_mnist_x, axis=-1)
     test_svhn_x = np.expand_dims(test_svhn_x, axis=-1)
