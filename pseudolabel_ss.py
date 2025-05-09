@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets import mnist
 import datasets 
-
+import ipdb
 
 def simple_conv_model(num_labels, hidden_nodes=64, input_shape=(28,28,1), l2_reg=0.0):
     return keras.models.Sequential([
@@ -87,6 +87,7 @@ def pseudolabel2(model, train_mnist_x, train_mnist_y, svhn_x, svhn_y, test_x, te
         alpha = np.quantile(confidence, confidence_q)
         indices = np.argwhere(confidence >= alpha)[:, 0]
         preds = np.argmax(logits, axis=1)
+        ipdb.set_trace()
         model.fit(train_mnist_x[indices], preds[indices], epochs=1, verbose=False)
         model.evaluate(test_x, test_y) 
      
