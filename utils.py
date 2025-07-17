@@ -40,9 +40,9 @@ def self_train(student_func, teacher, unsup_x, confidence_q=0.1, epochs=20, repe
     return accuracies, student
 
 
-def gradual_self_train(student_func, teacher, unsup_x, debug_y, interval, confidence_q=0.1,
-                       epochs=20, soft=False):
-    upper_idx = int(unsup_x.shape[0] / interval)
+def gradual_self_train(student_func, teacher, unsup_x, debug_y, interval, confidence_q=0.1,epochs=20, soft=False , upper_idx=None):
+    if upper_idx is not None:
+        upper_idx = int(unsup_x.shape[0] / interval)
     accuracies = []
     for i in range(upper_idx):
         student = student_func(teacher)
